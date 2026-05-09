@@ -3,17 +3,17 @@ import cv2
 import torch
 import matplotlib.pyplot as plt
 import seaborn as sns
-from PIL import ImageFont, ImageDraw, Image          # [추가] PIL 한글 렌더링용
+from PIL import ImageFont, ImageDraw, Image          # PIL 한글 렌더링용
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
 from dataset import CelebSmileDataset, val_transform
 from model import MultiTaskResNet
 import numpy as np
 
 # ── 한글 폰트 설정 (matplotlib) ──────────────────────────────────────
-plt.rcParams['font.family'] = 'Malgun Gothic'        # [추가] Windows 기본 한글 폰트
-plt.rcParams['axes.unicode_minus'] = False           # [추가] 마이너스 기호 깨짐 방지
+plt.rcParams['font.family'] = 'Malgun Gothic'        # Windows 기본 한글 폰트
+plt.rcParams['axes.unicode_minus'] = False           # 마이너스 기호 깨짐 방지
 
-FONT_PATH = "C:/Windows/Fonts/malgun.ttf"            # [추가] PIL용 한글 폰트 경로
+FONT_PATH = "C:/Windows/Fonts/malgun.ttf"            # PIL용 한글 폰트 경로
 
 def imread_korean(path):
     stream = np.fromfile(path, dtype=np.uint8)
@@ -25,7 +25,7 @@ def imwrite_korean(path, img):
     if result:
         encoded.tofile(path)
 
-# [추가] cv2.putText 대체 - PIL로 한글 텍스트 렌더링
+# cv2.putText 대체 - PIL로 한글 텍스트 렌더링
 def put_text_korean(img, text, pos, font_size=18, color=(0, 255, 0)):
     img_pil = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
     draw = ImageDraw.Draw(img_pil)

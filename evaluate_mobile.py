@@ -3,17 +3,17 @@ import cv2
 import torch
 import matplotlib.pyplot as plt
 import seaborn as sns
-from PIL import ImageFont, ImageDraw, Image          # [추가] PIL 한글 렌더링용
+from PIL import ImageFont, ImageDraw, Image          # PIL 한글 렌더링용
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
 from dataset import CelebSmileDataset, val_transform
-from model_mobile import MultiTaskMobileNet  # [수정] MobileNet 모델로 교체
+from model_mobile import MultiTaskMobileNet
 import numpy as np
 
 # ── 한글 폰트 설정 (matplotlib) ──────────────────────────────────────
-plt.rcParams['font.family'] = 'Malgun Gothic'        # [추가] Windows 기본 한글 폰트
-plt.rcParams['axes.unicode_minus'] = False           # [추가] 마이너스 기호 깨짐 방지
+plt.rcParams['font.family'] = 'Malgun Gothic'        # Windows 기본 한글 폰트
+plt.rcParams['axes.unicode_minus'] = False           # 마이너스 기호 깨짐 방지
 
-FONT_PATH = "C:/Windows/Fonts/malgun.ttf"            # [추가] PIL용 한글 폰트 경로
+FONT_PATH = "C:/Windows/Fonts/malgun.ttf"            # PIL용 한글 폰트 경로
 
 def imread_korean(path):
     stream = np.fromfile(path, dtype=np.uint8)
@@ -34,14 +34,14 @@ def put_text_korean(img, text, pos, font_size=18, color=(0, 255, 0)):
     return cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
 
 TEST_DIR   = 'data/processed/test'
-OUTPUT_DIR = 'classification_report_mobile'           # [수정] ResNet 결과와 분리
-MODEL_PATH = 'models/best_model_mobile_a1.5_b1.2.pt'  # [수정] 실험 후 최적 가중치 파일명으로 변경
+OUTPUT_DIR = 'classification_report_mobile'           # ResNet 결과와 분리
+MODEL_PATH = 'models/best_model_mobile_a1.5_b1.2.pt'  # 실험 후 최적 가중치 파일명으로 변경
     
 def evaluate_model():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     test_dataset = CelebSmileDataset(TEST_DIR, transform=val_transform)
 
-    model = MultiTaskMobileNet(num_celebs=len(test_dataset.celeb_classes)).to(device)  # [수정]
+    model = MultiTaskMobileNet(num_celebs=len(test_dataset.celeb_classes)).to(device)
     model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
     model.eval()
 
@@ -97,16 +97,16 @@ def evaluate_model():
     sns.heatmap(cm_celeb, annot=True, fmt='d',
                 xticklabels=test_dataset.celeb_classes,
                 yticklabels=test_dataset.celeb_classes)
-    plt.title('Celeb Confusion Matrix (MobileNet)')  # [수정]
+    plt.title('Celeb Confusion Matrix (MobileNet)')
 
     plt.subplot(1, 2, 2)
     cm_smile = confusion_matrix(y_true_smile, y_pred_smile)
     sns.heatmap(cm_smile, annot=True, fmt='d',
                 xticklabels=['Neutral', 'Smile'],
                 yticklabels=['Neutral', 'Smile'])
-    plt.title('Smile Confusion Matrix (MobileNet)')  # [수정]
+    plt.title('Smile Confusion Matrix (MobileNet)')
 
-    plt.savefig(os.path.join(OUTPUT_DIR, 'confusion_matrices_mobile.png'))  # [수정]
+    plt.savefig(os.path.join(OUTPUT_DIR, 'confusion_matrices_mobile.png'))
     print("Confusion Matrix 저장 완료.")
 
 def evaluate_opencv():

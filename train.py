@@ -38,8 +38,8 @@ def train_model(alpha=1.6, beta=0.7, num_epochs=30, patience=8, min_smile_acc=0.
 
     criterion = nn.CrossEntropyLoss()
     best_score      = 0.0
-    best_celeb_acc  = 0.0  # [버그수정] best 시점의 celeb_acc 별도 추적
-    best_smile_acc  = 0.0  # [버그수정] best 시점의 smile_acc 별도 추적
+    best_celeb_acc  = 0.0  # best 시점의 celeb_acc 별도 추적
+    best_smile_acc  = 0.0  # best 시점의 smile_acc 별도 추적
     patience_counter = 0
 
     # ── 1단계: Backbone 고정, Head만 학습 ────────────────────────────
@@ -103,7 +103,7 @@ def train_model(alpha=1.6, beta=0.7, num_epochs=30, patience=8, min_smile_acc=0.
             scheduler.step(avg_val_loss)
             current_lr = optimizer.param_groups[0]['lr']
 
-            print(f"[Phase1] Epoch [{epoch+1}/{PHASE1_EPOCHS}] - "  # [버그수정] 하드코딩 /10 → 변수로 통일
+            print(f"[Phase1] Epoch [{epoch+1}/{PHASE1_EPOCHS}] - "
                   f"Train Loss: {avg_train_loss:.4f} | Val Loss: {avg_val_loss:.4f} | "
                   f"Celeb Acc: {val_celeb_acc:.4f} | Smile Acc: {val_smile_acc:.4f} | LR: {current_lr:.6f}")
 
@@ -176,8 +176,8 @@ def train_model(alpha=1.6, beta=0.7, num_epochs=30, patience=8, min_smile_acc=0.
 
         if current_score > best_score and val_smile_acc >= min_smile_acc:
             best_score     = current_score
-            best_celeb_acc = val_celeb_acc  # [버그수정] best 시점 값 캡처
-            best_smile_acc = val_smile_acc  # [버그수정] best 시점 값 캡처
+            best_celeb_acc = val_celeb_acc  # best 시점 값 캡처
+            best_smile_acc = val_smile_acc  # best 시점 값 캡처
 
             model_filename = f'best_model_a{alpha}_b{beta}.pt'
             save_path = os.path.join(save_dir, model_filename)
@@ -197,7 +197,7 @@ def train_model(alpha=1.6, beta=0.7, num_epochs=30, patience=8, min_smile_acc=0.
             print("Early Stopping triggered.")
             break
 
-    # [버그수정] return 추가 - grid search에서 결과값 수신에 필요
+    # return 추가 - grid search에서 결과값 수신에 필요
     return {
         'best_score':     best_score,
         'best_celeb_acc': best_celeb_acc,

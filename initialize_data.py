@@ -71,7 +71,7 @@ def stratified_split():
     for k, v in sorted(counter.items()):
         print(f"  {k}: {v}장")
 
-    # 8:1:1 분할 (전체에서 20%를 먼저 떼어내고, 그걸 다시 반으로 나눔)
+    # 8:1:1 분할
     try:
         X_temp, X_test, y_temp, y_test = train_test_split(
             X, y_stratify,

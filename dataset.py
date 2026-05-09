@@ -104,15 +104,15 @@ class CelebSmileDataset(Dataset):
 train_transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.RandomHorizontalFlip(),
-    transforms.RandomRotation(15),                  # 10 → 15도
+    transforms.RandomRotation(15),
     transforms.ColorJitter(
-        brightness=0.4,                             # 0.2 → 0.4
-        contrast=0.4,                               # 0.2 → 0.4
-        saturation=0.3,                             # [추가]
-        hue=0.1                                     # [추가]
+        brightness=0.4,
+        contrast=0.4,
+        saturation=0.3,
+        hue=0.1
     ),
-    transforms.RandomGrayscale(p=0.1),              # [추가] 10% 확률 흑백 변환
-    transforms.RandomApply([                        # [추가] 50% 확률 가우시안 블러
+    transforms.RandomGrayscale(p=0.1),
+    transforms.RandomApply([
         transforms.GaussianBlur(kernel_size=3)
     ], p=0.5),
     transforms.ToTensor(),

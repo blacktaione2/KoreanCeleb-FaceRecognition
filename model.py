@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 from torchvision import models
 
@@ -18,7 +17,7 @@ class MultiTaskResNet(nn.Module):
                 param.requires_grad = False
 
         # 2. Shared Representation Layer (차원 확장: 256 -> 512)
-        # 512차원을 유지하여 정보 손실을 최소화하고 LayerNorm으로 안정성을 잡습니다.
+        # 512차원을 유지하여 정보 손실을 최소화, LayerNorm으로 안정성 증가
         self.shared = nn.Sequential(
             nn.Linear(in_features, 512),
             nn.LayerNorm(512), 

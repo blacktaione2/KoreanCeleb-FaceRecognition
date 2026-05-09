@@ -6,7 +6,7 @@ from dataset import CelebSmileDataset, train_transform, val_transform
 from model_mobile import MultiTaskMobileNet
 import os
 
-PHASE1_CKPT = 'models/phase1_mobile.pt'  # [수정] ResNet 체크포인트와 분리
+PHASE1_CKPT = 'models/phase1_mobile.pt'  # ResNet 체크포인트와 분리
 
 def train_model(alpha=1.5, beta=1.2, num_epochs=30, patience=8, min_smile_acc=0.70):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -39,8 +39,8 @@ def train_model(alpha=1.5, beta=1.2, num_epochs=30, patience=8, min_smile_acc=0.
     criterion = nn.CrossEntropyLoss()
 
     best_score      = 0.0
-    best_celeb_acc  = 0.0  # [버그수정] best 시점의 celeb_acc 별도 추적
-    best_smile_acc  = 0.0  # [버그수정] best 시점의 smile_acc 별도 추적
+    best_celeb_acc  = 0.0  # best 시점의 celeb_acc 별도 추적
+    best_smile_acc  = 0.0  # best 시점의 smile_acc 별도 추적
     patience_counter = 0
 
     # ── Phase 1: Backbone 고정, Head만 학습 ──────────────────────────
@@ -109,7 +109,7 @@ def train_model(alpha=1.5, beta=1.2, num_epochs=30, patience=8, min_smile_acc=0.
             scheduler.step(avg_val_loss)
             current_lr = optimizer.param_groups[0]['lr']
 
-            print(f"[Phase1] Epoch [{epoch+1}/{PHASE1_EPOCHS}] - "  # [버그수정] 실제 에폭 수 변수로 통일
+            print(f"[Phase1] Epoch [{epoch+1}/{PHASE1_EPOCHS}] - "  # 실제 에폭 수 변수로 통일
                   f"Train Loss: {avg_train_loss:.4f} | Val Loss: {avg_val_loss:.4f} | "
                   f"Celeb Acc: {val_celeb_acc:.4f} | Smile Acc: {val_smile_acc:.4f} | LR: {current_lr:.6f}")
 
@@ -187,10 +187,10 @@ def train_model(alpha=1.5, beta=1.2, num_epochs=30, patience=8, min_smile_acc=0.
 
         if current_score > best_score and val_smile_acc >= min_smile_acc:
             best_score     = current_score
-            best_celeb_acc = val_celeb_acc  # [버그수정] best 시점 값 캡처
-            best_smile_acc = val_smile_acc  # [버그수정] best 시점 값 캡처
+            best_celeb_acc = val_celeb_acc  # best 시점 값 캡처
+            best_smile_acc = val_smile_acc  # best 시점 값 캡처
 
-            model_filename = f'best_model_mobile_a{alpha}_b{beta}.pt'  # [수정] ResNet 파일과 분리
+            model_filename = f'best_model_mobile_a{alpha}_b{beta}.pt'  # ResNet 파일과 분리
             save_path = os.path.join(save_dir, model_filename)
 
             torch.save(model.state_dict(), save_path)
@@ -208,7 +208,7 @@ def train_model(alpha=1.5, beta=1.2, num_epochs=30, patience=8, min_smile_acc=0.
             print("Early Stopping triggered.")
             break
 
-    # [버그수정] return 추가 - grid search에서 결과값 수신에 필요
+    # return 추가 - grid search에서 결과값 수신에 필요
     return {
         'best_score':     best_score,
         'best_celeb_acc': best_celeb_acc,

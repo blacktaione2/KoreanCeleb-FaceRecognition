@@ -181,8 +181,7 @@ Loss = α × CE(Celeb) + β × CE(Smile)
 
 ```bash
 # 1. 환경 설치
-pip install torch torchvision opencv-python mtcnn selenium beautifulsoup4
-pip install pandas seaborn matplotlib numpy
+pip install -r requirements.txt
 
 # 2. 데이터 수집
 python crawling_naver.py
@@ -206,3 +205,49 @@ python grid_search_mobile.py
 python evaluate.py
 python evaluate_mobile.py
 ```
+
+---
+
+## 🌐 API 서버 (FastAPI)
+
+학습된 모델을 REST API로 서빙합니다. 이미지를 업로드하면 연예인 분류 + 미소 감지 결과를 JSON으로 반환합니다.
+
+**서버 실행**
+```bash
+python api.py
+```
+
+실행 후 `http://127.0.0.1:8000/docs` 에서 브라우저로 바로 테스트 가능합니다.
+
+**엔드포인트**
+
+| 메서드 | 경로 | 설명 |
+|--------|------|------|
+| GET | `/` | 서버 상태 확인 |
+| POST | `/predict` | 이미지 업로드 → 예측 결과 반환 |
+
+**요청 파라미터**
+
+| 파라미터 | 타입 | 기본값 | 설명 |
+|----------|------|--------|------|
+| `file` | 이미지 파일 | 필수 | 예측할 이미지 |
+| `model_type` | string | `resnet` | `resnet` 또는 `mobilenet` 선택 |
+
+**응답 예시**
+```json
+{
+  "model_used": "resnet",
+  "celeb": {
+    "name": "아이유",
+    "confidence": 91.3
+  },
+  "smile": {
+    "label": "smile",
+    "confidence": 84.7
+  },
+  "top3_candidates": [
+    { "name": "아이유",  "confidence": 91.3 },
+    { "name": "박보영", "confidence":  5.2 },
+    { "name": "로제",   "confidence":  2.1 }
+  ]
+}
