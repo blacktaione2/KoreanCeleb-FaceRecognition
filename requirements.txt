@@ -24,3 +24,8 @@ scikit-learn
 # Visualization
 matplotlib
 seaborn
+
+# API 서버
+fastapi
+uvicorn
+python-multipart
