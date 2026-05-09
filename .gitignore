@@ -1,0 +1,25 @@
+# 데이터
+data/
+
+# 모델 가중치
+models/
+*.pt
+*.pth
+
+# 결과물
+result/
+classification_report/
+classification_report_mobile/
+
+# Python 캐시
+__pycache__/
+*.pyc
+*.pyo
+
+# 환경 설정
+.env
+*.log
+
+# OS 자동 생성
+.DS_Store
+Thumbs.db
